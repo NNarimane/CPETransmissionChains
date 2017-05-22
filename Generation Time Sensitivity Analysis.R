@@ -29,7 +29,7 @@ library("splitstackshape")
 #########################
 #### SET ENVIRONMENT ####
 
-cat("Set Working Environemnt\n")
+cat("Set Working Environment\n")
 envNN=T
 if(envNN){
   currentwd=setwd("C:/Users/Narimane/Dropbox/CPE Transmission Chains")
@@ -53,10 +53,10 @@ load("../Hospital_Network/HospitalNetwork/Data/Department Network.RData")
 #### GET DATA ON OXA-48 CPE EPISODES ####
 
 cat("Choose start date\n")
-startDate="2015-01-01"
+startDate="2015-06-01"
 
 cat("Choose end date\n")
-endDate="2015-06-01"
+endDate="2015-12-01"
 
 cat("Load data\n")
 dsorted=getData(startDate, endDate)
@@ -74,15 +74,23 @@ Networks_Results = lapply(1:MaxMeanGT, function(i){
 })
 
 cat("Save Network Results\n")
-save(Networks_Results, file = paste0("Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution.RData"))
+# save(Networks_Results, file = paste0("Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution.RData"))
 
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/Network Results/2015-01-01 to 2015-06-01 Networks for meanGT 1 to 12 with Poisson Distribution.RData")
+######################
+#### LOAD NETWORKS ####
+
+cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
+# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-06-01 Networks for meanGT 1 to 60 with Poisson Distribution.RData")
+
+cat("Load Network Results for meanGT 1-60, June-Dec 2015\n")
+# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-06-01 to 2015-12-01 Networks for meanGT 1 to 60 with Poisson Distribution.RData")
+
 
 #########################################
 #### COMPONENTS ANALYSIS PER NETWORK ####
 
 cat("Set min_support\n")
-min_support=0.05
+min_support=0.01
 
 cat("Run Components Test\n")
 Components_Results=lapply(1:length(Networks_Results), function(i){
@@ -100,7 +108,7 @@ Components_Results=data.frame(matrix(unlist(Components_Results), ncol=3, byrow=T
 colnames(Components_Results)=c("meanGT", "Clusters", "Nodes")
 
 cat("Save Components Results\n")
-save(Components_Results, file = paste0("Components Results/",startDate, " to ", endDate, " Components Results for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution and min_support=",min_support,".RData"))
+# save(Components_Results, file = paste0("CPETransmissionChains/Components Results/",startDate, " to ", endDate, " Components Results for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution and min_support=",min_support,".RData"))
 
 ###################################
 #### GET NETWORKS VIA PARALLEL ####
