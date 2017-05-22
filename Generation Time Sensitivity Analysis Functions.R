@@ -224,6 +224,34 @@ buildNetworks_NoAncestorConfig<-function(meanGT){
   return(OutbreakerResult)
 }
 
+############################
+#### GET IMPORTED CASES ####
+buildNetworks<-function(meanGT){
+  
+  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
+  gentime=generation.time("gamma", c(meanGT, meanGT/2))
+  gentime=gentime$GT
+  
+  cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
+  myData=getCaseDataForPoissonTransformedDates(meanGT)
+  
+  cat("Get Contact Network\n")
+  myContacts=getContactNetwork(myData)
+  
+  cat("Get Ancesteries\n")
+  myAncestries=getAncestries(myData)
+  
+  cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
+  myOutbreakerData=outbreaker_data(dates=myData$Dates, 
+                                   dna=NULL,
+                                   ctd=myContacts,
+                                   w_dens=gentime)
+  
+  cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myAncestries)
+  
+  return(OutbreakerResult)
+}
 #################################################################################
 
 #### ORIGINAL BUILD NETWORK OF OUTBREAKER2 RESULTS ####
