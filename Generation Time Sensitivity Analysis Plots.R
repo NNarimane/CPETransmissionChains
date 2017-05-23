@@ -26,23 +26,22 @@ cat("Load Components Results for meanGT 1-60, min_supp=0.02, June-Dec 2015\n")
 # load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-06-01 to 2015-12-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.02.RData")
 
 cat("Load Components Results for meanGT 1-60, min_supp=0.01, Jan-June 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.01.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.01.RData")
 
 cat("Load Components Results for meanGT 1-60, min_supp=0.01, June-Dec 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-06-01 to 2015-12-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.01.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-06-01 to 2015-12-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.01.RData")
 
 
 ######################
 #### PLOT RESULTS ####
 
 par(mfrow=c(2,2))
-min_support="0.02,"
+min_support="0.01,"
 time1=" Jan-June 2015"
 time2=" June-Dec 2015"
 
 #Number of Nodes
-plot(Components_Results[,1], Components_Results[,3],
-     # ylim=c(150,270), xlim=c(0,20),
+plot(Components_Results[,1], Components_Results[,4],
      type="l",
      ylab="Number of Nodes", xlab="Mean Generation Time", pch=16, col="red",
      main=paste0("#Nodes by MeanGT, ", "min_support=", min_support, time2))
@@ -55,6 +54,25 @@ plot(Components_Results[,1], Components_Results[,2],
      main=paste0("#Clusters by MeanGT, ", "min_support=", min_support, time2))
 
 ###############################################################################
+
+depth.class <- cut(Components_Results[,1], c(0,5,10,15,20,25,30,35,40,45,50,55,60), include.lowest = TRUE)
+Components_Results$depth.class=depth.class
+
+Components_Results_Aggregated=aggregate(Components_Results, by=list(Components_Results$depth.class), mean)
+
+#Number of Nodes
+plot(Components_Results_Aggregated[,2], Components_Results_Aggregated[,4],
+     type="l",
+     ylab="Mean Number of Nodes", xlab="Mean Generation Time", pch=16, col="red",
+     main=paste0("Mean Nodes by MeanGT, ", "min_support=", min_support, time2))
+
+#Number of Clusters
+plot(Components_Results_Aggregated[,2], Components_Results_Aggregated[,3],
+     # ylim=c(1,14), xlim=c(0,20),
+     type="l",
+     ylab="Number of Clusters", xlab="Mean Generation Time", pch=16, col="red",
+     main=paste0("Mean Clusters by MeanGT, ", "min_support=", min_support, time2))
+
 
 # #####For min_support=0.02
 # #Number of Nodes
