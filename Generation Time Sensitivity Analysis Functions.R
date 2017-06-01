@@ -45,7 +45,18 @@ getCaseDataForNonTransformedDates=function(){
   cat("Reorder data by dates and rename rownames\n")
   Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
-  Final_Case_Data$ID=NULL
+  
+  cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
+  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
+  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
+  
+  cat("Disable estimation of ancestors for imported cases\n")
+  Final_Case_Data$move_alpha=(Final_Case_Data$Imported == "N")
+  
+  cat("Rename Columns\n")
+  colnames(Final_Case_Data)=c("ID","DateEpisode","Department","Imported","TotalCases","Dates","initial_value","move_alpha")
+  
   return(Final_Case_Data)
 }
 
@@ -71,7 +82,18 @@ getCaseDataForRandomlyTransformedDates=function(meanGT){
   cat("Reorder data by dates and rename rownames\n")
   Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
-  Final_Case_Data$ID=NULL
+  
+  cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
+  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
+  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
+  
+  cat("Disable estimation of ancestors for imported cases\n")
+  Final_Case_Data$move_alpha=(Final_Case_Data$Imported == "N")
+  
+  cat("Rename Columns\n")
+  colnames(Final_Case_Data)=c("ID","DateEpisode","Department","Imported","TotalCases","Dates","initial_value","move_alpha")
+  
   return(Final_Case_Data)
 }
 
@@ -99,7 +121,18 @@ getCaseDataForNormallyTransformedDates=function(meanGT){
   cat("Reorder data by dates and rename rownames\n")
   Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
-  Final_Case_Data$ID=NULL
+  
+  cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
+  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
+  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
+  
+  cat("Disable estimation of ancestors for imported cases\n")
+  Final_Case_Data$move_alpha=(Final_Case_Data$Imported == "N")
+  
+  cat("Rename Columns\n")
+  colnames(Final_Case_Data)=c("ID","DateEpisode","Department","Imported","TotalCases","Dates","initial_value","move_alpha")
+  
   return(Final_Case_Data)
 }
 
@@ -127,7 +160,18 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   cat("Reorder data by dates and rename rownames\n")
   Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
-  Final_Case_Data$ID=NULL
+  
+  cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
+  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
+  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
+  
+  cat("Disable estimation of ancestors for imported cases\n")
+  Final_Case_Data$move_alpha=(Final_Case_Data$Imported == "N")
+  
+  cat("Rename Columns\n")
+  colnames(Final_Case_Data)=c("ID","DateEpisode","Department","Imported","TotalCases","Dates","initial_value","move_alpha")
+  
   return(Final_Case_Data)
 }
 
@@ -138,7 +182,7 @@ getContactNetwork=function(myData){
   edges=get.edgelist(directed.graph_Dept)
   
   cat("Subset Network by Relevant Edges\n")
-  mydepts=unique(myData[,2])
+  mydepts=unique(myData[,3])
   edges=as.data.frame(edges, stringsAsFactors = F)
   myEdges=edges[which(edges$V1 %in% mydepts),]
   myEdges=myEdges[which(myEdges$V2 %in% mydepts),]
@@ -146,8 +190,8 @@ getContactNetwork=function(myData){
   
   cat("Rename Edges to Event ID (without repeated departments)\n")
   for(i in 1:nrow(myData)){
-    myEdges$V1[which(myData[i,2]==myEdges$V1)]=row.names(myData[i,])
-    myEdges$V2[which(myData[i,2]==myEdges$V2)]=row.names(myData[i,])
+    myEdges$V1[which(myData[i,3]==myEdges$V1)]=row.names(myData[i,])
+    myEdges$V2[which(myData[i,3]==myEdges$V2)]=row.names(myData[i,])
   }
   rownames(myEdges)=1:nrow(myEdges)
   colnames(myEdges)=c("Origin", "Target")
@@ -158,16 +202,16 @@ getContactNetwork=function(myData){
 
 ########################
 #### GET ANCESTRIES ####
-getAncestries=function(myData){
-  cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
-  myData=myData[order(myData$DateEpisode),]
-  rownumber=cbind(as.numeric(rownames(myData[myData$Imported == "N",])), as.numeric(rownames(myData[myData$Imported == "N",])))
-  myData$rownumber=as.numeric(rownames(myData))
-  myData=merge(myData, rownumber, by.x=("rownumber"), by.y="V1", all.x=T)
-  cat("Configure\n")
-  config = create_config(init_alpha = myData$V2, init_tree = myData$V2)
-  return(config)
-}
+# getAncestries=function(myData){
+#   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
+#   myData=myData[order(myData$DateEpisode),]
+#   rownumber=cbind(as.numeric(rownames(myData[myData$Imported == "N",])), as.numeric(rownames(myData[myData$Imported == "N",])))
+#   myData$rownumber=as.numeric(rownames(myData))
+#   myData=merge(myData, rownumber, by.x=("rownumber"), by.y="V1", all.x=T)
+#   cat("Configure\n")
+#   config = create_config(init_alpha = myData$V2, init_tree = myData$V2)
+#   return(config)
+# }
 
 #################################
 #### BUILD NETWORKS FUNCTION ####
@@ -183,8 +227,10 @@ buildNetworks<-function(meanGT){
   cat("Get Contact Network\n")
   myContacts=getContactNetwork(myData)
   
-  cat("Get Ancesteries\n")
-  myAncestries=getAncestries(myData)
+  cat("Configure Ancesteries\n")
+  myConfig = create_config(init_alpha = myData$initial_value, 
+                           move_alpha = myData$move_alpha, 
+                           init_tree = myData$initial_value)
   
   cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
   myOutbreakerData=outbreaker_data(dates=myData$Dates, 
@@ -193,7 +239,7 @@ buildNetworks<-function(meanGT){
                                    w_dens=gentime)
   
   cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
-  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myAncestries)
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myConfig)
   
   return(OutbreakerResult)
 }
@@ -224,9 +270,9 @@ buildNetworks_NoAncestorConfig<-function(meanGT){
   return(OutbreakerResult)
 }
 
-############################
-#### GET IMPORTED CASES ####
-buildNetworks<-function(meanGT){
+#################################
+#### BUILD NETWORKS FUNCTIONS ####
+buildNetworks_Poisson<-function(meanGT){
   
   cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
   gentime=generation.time("gamma", c(meanGT, meanGT/2))
@@ -238,8 +284,10 @@ buildNetworks<-function(meanGT){
   cat("Get Contact Network\n")
   myContacts=getContactNetwork(myData)
   
-  cat("Get Ancesteries\n")
-  myAncestries=getAncestries(myData)
+  cat("Configure Ancesteries\n")
+  myConfig = create_config(init_alpha = myData$initial_value, 
+                           move_alpha = myData$move_alpha, 
+                           init_tree = myData$initial_value)
   
   cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
   myOutbreakerData=outbreaker_data(dates=myData$Dates, 
@@ -248,10 +296,96 @@ buildNetworks<-function(meanGT){
                                    w_dens=gentime)
   
   cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
-  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myAncestries)
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myConfig)
   
   return(OutbreakerResult)
 }
+buildNetworks_NonTransformed<-function(meanGT){
+  
+  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
+  gentime=generation.time("gamma", c(meanGT, meanGT/2))
+  gentime=gentime$GT
+  
+  cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
+  myData=getCaseDataForNonTransformedDates()
+  
+  cat("Get Contact Network\n")
+  myContacts=getContactNetwork(myData)
+  
+  cat("Configure Ancesteries\n")
+  myConfig = create_config(init_alpha = myData$initial_value, 
+                           move_alpha = myData$move_alpha, 
+                           init_tree = myData$initial_value)
+  
+  cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
+  myOutbreakerData=outbreaker_data(dates=myData$Dates, 
+                                   dna=NULL,
+                                   ctd=myContacts,
+                                   w_dens=gentime)
+  
+  cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myConfig)
+  
+  return(OutbreakerResult)
+}
+buildNetworks_AddingRandomly<-function(meanGT){
+  
+  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
+  gentime=generation.time("gamma", c(meanGT, meanGT/2))
+  gentime=gentime$GT
+  
+  cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
+  myData=getCaseDataForRandomlyTransformedDates(meanGT)
+  
+  cat("Get Contact Network\n")
+  myContacts=getContactNetwork(myData)
+  
+  cat("Configure Ancesteries\n")
+  myConfig = create_config(init_alpha = myData$initial_value, 
+                           move_alpha = myData$move_alpha, 
+                           init_tree = myData$initial_value)
+  
+  cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
+  myOutbreakerData=outbreaker_data(dates=myData$Dates, 
+                                   dna=NULL,
+                                   ctd=myContacts,
+                                   w_dens=gentime)
+  
+  cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myConfig)
+  
+  return(OutbreakerResult)
+}
+buildNetworks_Normal<-function(meanGT){
+  
+  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
+  gentime=generation.time("gamma", c(meanGT, meanGT/2))
+  gentime=gentime$GT
+  
+  cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
+  myData=getCaseDataForNormallyTransformedDates(meanGT)
+  
+  cat("Get Contact Network\n")
+  myContacts=getContactNetwork(myData)
+  
+  cat("Configure Ancesteries\n")
+  myConfig = create_config(init_alpha = myData$initial_value, 
+                           move_alpha = myData$move_alpha, 
+                           init_tree = myData$initial_value)
+  
+  cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
+  myOutbreakerData=outbreaker_data(dates=myData$Dates, 
+                                   dna=NULL,
+                                   ctd=myContacts,
+                                   w_dens=gentime)
+  
+  cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myConfig)
+  
+  return(OutbreakerResult)
+}
+
+
 #################################################################################
 
 #### ORIGINAL BUILD NETWORK OF OUTBREAKER2 RESULTS ####

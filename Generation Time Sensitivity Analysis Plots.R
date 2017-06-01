@@ -10,138 +10,185 @@ if(envNN){
   currentwd=setwd("/Users/pascalcrepey/Google Drive/1-EPC/stageNN/") 
 }
 
-######################
+# install.packages("smooth")
+library("smooth")
+
+##################################################################
+##Mean of 5 Runs of Poisson Distribution (pre-move_alpha config)##
+
 #### LOAD RESULTS ####
 
-cat("Load Components Results for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+cat("Load Components Results1 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results1 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
-cat("Load Components Results for meanGT 1-60, min_supp=0.05, June-Dec 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-06-01 to 2015-12-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+cat("Load Components Results2 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results2 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
-cat("Load Components Results for meanGT 1-60, min_supp=0.02, Jan-June 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.02.RData")
+cat("Load Components Results3 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results3 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
-cat("Load Components Results for meanGT 1-60, min_supp=0.02, June-Dec 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-06-01 to 2015-12-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.02.RData")
+cat("Load Components Results4 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results4 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
-cat("Load Components Results for meanGT 1-60, min_supp=0.01, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.01.RData")
+cat("Load Components Results5 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results5 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
-cat("Load Components Results for meanGT 1-60, min_supp=0.01, June-Dec 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-06-01 to 2015-12-01 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.01.RData")
+#### GET MEAN OF RESULTS ####
 
+meanGT=Components_Results1$meanGT
+meanClusters=rowMeans(cbind(Components_Results1$Clusters, Components_Results2$Clusters, Components_Results3$Clusters,
+                            Components_Results4$Clusters, Components_Results5$Clusters))
+meanNodes=rowMeans(cbind(Components_Results1$Nodes, Components_Results2$Nodes, Components_Results3$Nodes,
+                         Components_Results4$Nodes, Components_Results5$Nodes))
+Mean_Components_Results=as.data.frame(cbind(meanGT, meanClusters, meanNodes))
 
-######################
 #### PLOT RESULTS ####
 
-par(mfrow=c(2,2))
-min_support="0.01,"
-time1=" Jan-June 2015"
-time2=" June-Dec 2015"
+par(mfrow=c(2,1))
+min_support="0.05,"
+time=" Jan-June 2015"
 
-#Number of Nodes
-plot(Components_Results[,1], Components_Results[,4],
-     type="l",
+####################
+#Plot 5 Runs, Nodes#
+
+plot(Components_Results1[,3], type="l", col="black", ylim=c(15,120), 
+     main=paste0("#Nodes by MeanGT of 5 Runs, ", "min_support=", min_support, time),
+     ylab="Number of Nodes", xlab="Mean Generation Time")
+lines(Components_Results2[,3], col="red")
+lines(Components_Results3[,3], col="blue")
+lines(Components_Results4[,3], col="green")
+lines(Components_Results5[,3], col="purple")
+#Plot 5 Runs, Clusters
+plot(Components_Results1[,2], type="l", col="black", ylim=c(0,22),
+     main=paste0("#Clusters by MeanGT of 5 Runs, ", "min_support=", min_support, time),
+     ylab="Number of Clusters", xlab="Mean Generation Time")
+lines(Components_Results2[,2], col="red")
+lines(Components_Results3[,2], col="blue")
+lines(Components_Results4[,2], col="green")
+lines(Components_Results5[,2], col="purple")
+
+#################
+#Plot Mean Nodes#
+
+plot(Mean_Components_Results[,3], 
+     ylab="Number of Nodes", xlab="Mean Generation Time", pch=16, col="red", type="l",
+     main=paste0("Mean #Nodes by MeanGT of 5 Runs, ", "min_support=", min_support, time1))
+
+#Plot Mean Clusters
+plot(Mean_Components_Results[,2], 
+     ylab="Number of Clusters", xlab="Mean Generation Time", pch=16, col="red", type="l",
+     main=paste0("Mean #Clusters by MeanGT of 5 Runs, ", "min_support=", min_support, time1))
+
+#####################
+#Plot Moving Average#
+
+cat("Calculate Moving Average\n")
+plot_Nodes_JanJune2015=sma(Mean_Components_Results[,3])
+plot_Clusters_JanJune2015=sma(Mean_Components_Results[,2])
+
+#Plot Mean Number of Nodes of Moving Average
+plot(plot_Nodes_JanJune2015$fitted, 
      ylab="Number of Nodes", xlab="Mean Generation Time", pch=16, col="red",
-     main=paste0("#Nodes by MeanGT, ", "min_support=", min_support, time2))
+     main=paste0("Mean #Nodes by MeanGT of 5 Runs, ", "min_support=", min_support, time1))
+grid(col="lightgray")
 
-#Number of Clusters
-plot(Components_Results[,1], Components_Results[,2],
-     # ylim=c(1,14), xlim=c(0,20),
-     type="l",
+#Plot Mean Number of Clusters of Moving Average
+plot(plot_Clusters_JanJune2015$fitted, 
      ylab="Number of Clusters", xlab="Mean Generation Time", pch=16, col="red",
-     main=paste0("#Clusters by MeanGT, ", "min_support=", min_support, time2))
+     main=paste0("Mean #Clusters by MeanGT of 5 Runs, ", "min_support=", min_support, time1))
+grid(col="lightgray")
 
-###############################################################################
+#######################################
+##Different Case Date Transformations##
 
-depth.class <- cut(Components_Results[,1], c(0,5,10,15,20,25,30,35,40,45,50,55,60), include.lowest = TRUE)
-Components_Results$depth.class=depth.class
+#### LOAD RESULTS ####
 
-Components_Results_Aggregated=aggregate(Components_Results, by=list(Components_Results$depth.class), mean)
+cat("Load Components Results (Poisson) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results1 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
-#Number of Nodes
-plot(Components_Results_Aggregated[,2], Components_Results_Aggregated[,4],
+cat("Load Components Results (NonTransformed) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with NonTransformed Distribution and min_support=0.05.RData")
+
+cat("Load Components Results (AddingRandomly) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with AddingRandomly Distribution and min_support=0.05.RData")
+
+cat("Load Components Results (Normal) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with Normal Distribution and min_support=0.05.RData")
+
+####Moving Average####
+
+plot_NonTransformed=sma(Components_Results_NonTransformed[,3])
+plot_AddingRandomly=sma(Components_Results_AddingRandomly[,3])
+plot_Normal=sma(Components_Results_Normal[,3])
+plot_Poisson=sma(Components_Results_Poisson[,3])
+
+####Paramaters####
+
+min_support="0.05,"
+time=" Jan-June 2015"
+
+####Plot####
+
+plot(plot_Poisson$fitted, 
      type="l",
-     ylab="Mean Number of Nodes", xlab="Mean Generation Time", pch=16, col="red",
-     main=paste0("Mean Nodes by MeanGT, ", "min_support=", min_support, time2))
+     col="black", 
+     # ylim=c(15,120), 
+     main=paste0("#Nodes by MeanGT, Case Date Transformations, ", "min_support=", min_support, time),
+     ylab="Number of Nodes (Moving Average)", xlab="Mean Generation Time")
+# lines(plot_AddingRandomly$fitted, col="red")
+lines(plot_Normal$fitted, col="blue")
+lines(plot_NonTransformed$fitted, col="green")
+# lines(plot_Nodes_JanJune2015$fitted, col="green")
+grid(col="lightgray")
+par(xpd=FALSE)
+legend(14,33, 
+       legend=c("Non-Transformed Dates (Episode Dates)",
+                       "Adding Random Values 1 to meanGT", 
+                       "Adding Normal Distribution to Dates (1 to meanGT)", 
+                      "Adding Poisson Distribution to Dates (1 to meanGT) - Average of 5 Results"), 
+       pch = c(16,16,16,16), 
+       col = c("black","red","blue","green"),
+       cex=0.7)
 
-#Number of Clusters
-plot(Components_Results_Aggregated[,2], Components_Results_Aggregated[,3],
-     # ylim=c(1,14), xlim=c(0,20),
+
+
+#######################################
+##New Poisson Results with move_alpha##
+
+#### LOAD RESULTS ####
+
+cat("Load Components Results (Poisson) for meanGT 1-60, min_supp=0.05, Jan-June 2015, move_alpha\n")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+
+####Moving Average####
+
+plot_Poisson=sma(Components_Results_Poisson[,3])
+
+####Paramaters####
+
+min_support="0.05,"
+time=" Jan-June 2015"
+par(mfrow=c(2,1))
+
+####Plot####
+
+plot(plot_Poisson$fitted, 
      type="l",
-     ylab="Number of Clusters", xlab="Mean Generation Time", pch=16, col="red",
-     main=paste0("Mean Clusters by MeanGT, ", "min_support=", min_support, time2))
+     col="red", 
+     ylim=c(20,120),
+     ylab="Number of Nodes", xlab="Mean Generation Time")
+title(main=paste0("#Nodes by MeanGT, Poisson, ", "min_support=", min_support, time))
+lines(Components_Results_Poisson[,3], col="gray")
+grid(col="lightgray")
+legend(40,110,
+       legend = c("Real Values", "Moving Average"),
+       lwd=c(2.5,2.5),
+       col = c("gray", "red"))
 
-
-# #####For min_support=0.02
-# #Number of Nodes
-# plot(ComponentsOfAdding1to15DaysToCaseDates_002[,1], ComponentsOfAdding1to15DaysToCaseDates_002[,3],
-#      ylim=c(150,270), xlim=c(0,20),
-#      ylab="Number of Nodes", xlab="Mean Generation Time", pch=16, col="red",
-#      main="Distribution of Nodes and Mean GT with min_support=0.02")
-# points(ComponentsOfNormalDistOfCaseDates_002[,1], ComponentsOfNormalDistOfCaseDates_002[,3], 
-#        pch=16, col="blue")
-# points(ComponentsOfNonRandomDistOfCaseDates_002[,1], ComponentsOfNonRandomDistOfCaseDates_002[,3], 
-#        pch=16, col="green")
-# legend(14,265, legend=c("Adding Random 1 + 15 Days","Normal Distribution, SD=7.5", "Non-Random Dates"), pch = c(16,16,16), col = c("red","blue","green"))
-# 
-# #Number of Clusters
-# plot(ComponentsOfAdding1to15DaysToCaseDates_002[,1], ComponentsOfAdding1to15DaysToCaseDates_002[,2],
-#      ylim=c(1,14), xlim=c(0,20),
-#      ylab="Number of Clusters", xlab="Mean Generation Time", pch=16, col="red",
-#      main="Distribution of Clusters and Mean GT with min_support=0.02")
-# points(ComponentsOfNormalDistOfCaseDates_002[,1], ComponentsOfNormalDistOfCaseDates_002[,2], 
-#        pch=16, col="blue")
-# points(ComponentsOfNonRandomDistOfCaseDates_002[,1], ComponentsOfNonRandomDistOfCaseDates_002[,2], 
-#        pch=16, col="green")
-# legend(5,14, legend=c("Adding Random 1 + 15 Days","Normal Distribution, SD=7.5", "Non-Random Dates"), pch = c(16,16,16), col = c("red","blue","green"))
-# 
-# #####For min_support=0.1
-# #Number of Nodes
-# plot(ComponentsOfAdding1to15DaysToCaseDates_01[,1], ComponentsOfAdding1to15DaysToCaseDates_01[,3],
-#      ylim=c(0,14), xlim=c(0,20),
-#      ylab="Number of Nodes", xlab="Mean Generation Time", pch=16, col="red",
-#      main="Distribution of Nodes and Mean GT with min_support=0.1")
-# points(ComponentsOfNormalDistOfCaseDates_01[,1], ComponentsOfNormalDistOfCaseDates_01[,3], 
-#        pch=16, col="blue")
-# points(ComponentsOfNonRandomDistOfCaseDates_01[,1], ComponentsOfNonRandomDistOfCaseDates_01[,3],
-#        pch=16, col="green")
-# legend(14,14, legend=c("Adding Random 1 + 15 Days","Normal Distribution, SD=7.5", "Non-Random Dates"), pch = c(16,16,16), col = c("red","blue","green"))
-# 
-# #Number of Clusters
-# plot(ComponentsOfAdding1to15DaysToCaseDates_01[,1], ComponentsOfAdding1to15DaysToCaseDates_01[,2],
-#      ylim=c(1,5), xlim=c(0,20),
-#      ylab="Number of Clusters", xlab="Mean Generation Time", pch=16, col="red",
-#      main="Distribution of Clusters and Mean GT with min_support=0.1")
-# points(ComponentsOfNormalDistOfCaseDates_01[,1], ComponentsOfNormalDistOfCaseDates_01[,2], 
-#        pch=16, col="blue")
-# points(ComponentsOfNonRandomDistOfCaseDates_01[,1], ComponentsOfNonRandomDistOfCaseDates_01[,2],
-#        pch=16, col="green")
-# legend(14,5, legend=c("Adding Random 1 + 15 Days","Normal Distribution, SD=7.5", "Non-Random Dates"), pch = c(16,16,16), col = c("red","blue","green"))
-
-###############################################################################
-
-# cat("Load old results\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/GT Results/Phase 2/2015-01-01 to 2015-06-01 GT Sensitivity Results (with myContacts & config & 0.02 support).RData")
-# ComponentsOfAdding1to15DaysToCaseDates_002=nbComps_JanJun2015
-# ComponentsOfAdding1to15DaysToCaseDates_002[,1]=1:15
-# 
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/GT Results/Phase 2/2015-01-01 to 2015-06-01 GT Sensitivity Results (with myContacts & config & 0.02 support for Normalized Case Dates).RData")
-# ComponentsOfNormalDistOfCaseDates_002=nbComps_JanJun2015_Normal002
-# 
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/GT Results/Phase 2/2015-01-01 to 2015-06-01 GT Sensitivity Results (with myContacts & config & 0.02 support for Non-Randomized Case Dates).RData")
-# ComponentsOfNonRandomDistOfCaseDates_002=nbComps_JanJun2015
-# 
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/GT Results/Phase 2/2015-01-01 to 2015-06-01 GT Sensitivity Results (with myContacts & config & 0.1 support).RData")
-# ComponentsOfAdding1to15DaysToCaseDates_01=nbComps_JanJun2015
-# ComponentsOfAdding1to15DaysToCaseDates_01[,1]=1:20
-# 
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/GT Results/Phase 2/2015-01-01 to 2015-06-01 GT Sensitivity Results (with myContacts & config & 0.1 support for Normalized Case Dates).RData")
-# ComponentsOfNormalDistOfCaseDates_01=nbComps_JanJun2015_Normal01
-# 
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/GT Results/Phase 2/2015-01-01 to 2015-06-01 GT Sensitivity Results (with myContacts & config & 0.1 support for Non-Randomized Case Dates).RData")
-# ComponentsOfNonRandomDistOfCaseDates_01=nbComps_JanJun2015_NonRandom01
-
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-01 Components Results for meanGT 1 to 12 with Poisson Distribution and min_support=0.05.RData")
-# nbComps_JanJun2015_Poisson_005_1to20=Components_Results
+plot(plot_Poisson$fitted, 
+     type="l",
+     col="red", 
+     # ylim=c(20,120),
+     main="Zoom on moving average results",
+     ylab="Number of Nodes", xlab="Mean Generation Time")
+grid(col="lightgray")

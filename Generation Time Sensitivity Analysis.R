@@ -40,7 +40,7 @@ if(envNN){
 ###################################
 #### GET FUNCTIONS SOURCE CODE ####
 
-source("C:/Users/Narimane/Dropbox/CPE Transmission Chains/Generation Time Sensitivity Analysis Functions.R", 
+source("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Generation Time Sensitivity Analysis Functions.R", 
        local = FALSE, verbose = getOption("verbose"))
 
 ###########################
@@ -53,10 +53,10 @@ load("../Hospital_Network/HospitalNetwork/Data/Department Network.RData")
 #### GET DATA ON OXA-48 CPE EPISODES ####
 
 cat("Choose start date\n")
-startDate="2015-06-01"
+startDate="2015-01-01"
 
 cat("Choose end date\n")
-endDate="2015-12-01"
+endDate="2015-06-30"
 
 cat("Load data\n")
 dsorted=getData(startDate, endDate)
@@ -64,37 +64,76 @@ dsorted=getData(startDate, endDate)
 ######################
 #### GET NETWORKS ####
 
+# cat("Maximum meanGT time to test\n")
+# MaxMeanGT=60
+# 
+# cat("Get Networks via lapply\n")
+# Networks_Results = lapply(1:MaxMeanGT, function(i){
+#   Network=buildNetworks(i)
+#   return(Network)
+# })
+# 
+# cat("Save Network Results\n")
+# save(Networks_Results, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution.RData"))
+# 
+
+######################
+#### GET NETWORKS ####
+
 cat("Maximum meanGT time to test\n")
 MaxMeanGT=60
 
+#Poisson
 cat("Get Networks via lapply\n")
-Networks_Results = lapply(1:MaxMeanGT, function(i){
-  Network=buildNetworks(i)
+Networks_Results_Poisson = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
   return(Network)
 })
-
 cat("Save Network Results\n")
-# save(Networks_Results, file = paste0("Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution.RData"))
+save(Networks_Results_Poisson, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution.RData"))
+
+#NonTransformed
+cat("Get Networks via lapply\n")
+Networks_Results_NonTransformed = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_NonTransformed(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_NonTransformed, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with NonTransformed Distribution.RData"))
+
+#AddingRandomly
+cat("Get Networks via lapply\n")
+Networks_Results_AddingRandomly = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_AddingRandomly(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_AddingRandomly, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with AddingRandomly Distribution.RData"))
+
+#Normal
+cat("Get Networks via lapply\n")
+Networks_Results_Normal = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Normal(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Normal, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Normal Distribution.RData"))
+
 
 ######################
 #### LOAD NETWORKS ####
 
-cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-06-01 Networks for meanGT 1 to 60 with Poisson Distribution.RData")
-
-cat("Load Network Results for meanGT 1-60, June-Dec 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-06-01 to 2015-12-01 Networks for meanGT 1 to 60 with Poisson Distribution.RData")
-
+# cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
 
 #########################################
 #### COMPONENTS ANALYSIS PER NETWORK ####
 
 cat("Set min_support\n")
-min_support=0.01
+min_support=0.05
 
 cat("Run Components Test\n")
-Components_Results=lapply(1:length(Networks_Results), function(i){
-  Network=Networks_Results[[i]]
+Components_Results_Poisson=lapply(1:length(Networks_Results_Poisson), function(i){
+  Network=Networks_Results_Poisson[[i]]
   Network_Plot=plot(Network, type="network", min_support = min_support)
   Network_Edgelist=cbind(Network_Plot$x$edges$from, Network_Plot$x$edges$to)
   Graph=graph_from_edgelist(Network_Edgelist)
@@ -104,11 +143,11 @@ Components_Results=lapply(1:length(Networks_Results), function(i){
   return(Result)
 })
 
-Components_Results=data.frame(matrix(unlist(Components_Results), ncol=3, byrow=T))
-colnames(Components_Results)=c("meanGT", "Clusters", "Nodes")
+Components_Results_Poisson=data.frame(matrix(unlist(Components_Results_Poisson), ncol=3, byrow=T))
+colnames(Components_Results_Poisson)=c("meanGT", "Clusters", "Nodes")
 
 cat("Save Components Results\n")
-# save(Components_Results, file = paste0("CPETransmissionChains/Components Results/",startDate, " to ", endDate, " Components Results for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution and min_support=",min_support,".RData"))
+save(Components_Results_Poisson, file = paste0("CPETransmissionChains/Components Results/",startDate, " to ", endDate, " Components Results for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution and min_support=",min_support,".RData"))
 
 ###################################
 #### GET NETWORKS VIA PARALLEL ####
