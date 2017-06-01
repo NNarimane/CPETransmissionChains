@@ -19,19 +19,19 @@ library("smooth")
 #### LOAD RESULTS ####
 
 cat("Load Components Results1 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results1 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results1 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
 cat("Load Components Results2 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results2 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results2 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
 cat("Load Components Results3 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results3 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results3 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
 cat("Load Components Results4 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results4 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results4 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
 cat("Load Components Results5 for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results5 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results5 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
 #### GET MEAN OF RESULTS ####
 
@@ -104,16 +104,16 @@ grid(col="lightgray")
 #### LOAD RESULTS ####
 
 cat("Load Components Results (Poisson) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results1 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results1 for meanGT 1 to 60 with Poisson Distribution and min_support=0.05.RData")
 
 cat("Load Components Results (NonTransformed) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with NonTransformed Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with NonTransformed Distribution and min_support=0.05.RData")
 
 cat("Load Components Results (AddingRandomly) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with AddingRandomly Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with AddingRandomly Distribution and min_support=0.05.RData")
 
 cat("Load Components Results (Normal) for meanGT 1-60, min_supp=0.05, Jan-June 2015\n")
-load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with Normal Distribution and min_support=0.05.RData")
+load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Components Results/Older results/2015-01-01 to 2015-06-30 Components Results for meanGT 1 to 60 with Normal Distribution and min_support=0.05.RData")
 
 ####Moving Average####
 
