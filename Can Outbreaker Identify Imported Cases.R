@@ -40,7 +40,7 @@ if(envNN){
 ###################################
 #### GET FUNCTIONS SOURCE CODE ####
 
-source("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Generation Time Sensitivity Analysis Functions.R", 
+source("CPETransmissionChains/Generation Time Sensitivity Analysis Functions.R", 
        local = FALSE, verbose = getOption("verbose"))
 
 ###########################
@@ -56,7 +56,7 @@ cat("Choose start date\n")
 startDate="2015-01-01"
 
 cat("Choose end date\n")
-endDate="2015-02-28"
+endDate="2015-06-30"
 
 cat("Load data\n")
 dsorted=getData(startDate, endDate)
@@ -65,7 +65,7 @@ dsorted=getData(startDate, endDate)
 #### NUMBER OF NETWORKS TO COMPARE ####
 
 cat("Set number of repetitions\n")
-repetitions=2
+repetitions=5
 
 #########################
 #### MEAN GT TO TEST ####
@@ -81,15 +81,15 @@ meanGT=rep(meanGT_toTest, repetitions)
 
 cat("Get Networks via lapply\n")
 Networks_Results = lapply(meanGT, function(i){
-  Network=buildNetworks(i)
+  Network=buildNetworks_test(i)
   return(Network)
 })
 
 cat("Save Network Results\n")
-save(Networks_Results, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution.RData"))
+save(Networks_Results, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution without move_alpha.RData"))
 
-cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-06-01 Networks for meanGT 1 to 60 with Poisson Distribution.RData")
+# cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
+# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-02-28 Networks for meanGT equals 20 with Poisson Distribution.RData")
 
 #####################################################
 #### GET/LOAD NETWORKS *WITHOUT* ANCESTOR CONFIG ####
@@ -103,8 +103,8 @@ Networks_Results_NoAncestorConfig = lapply(meanGT, function(i){
 cat("Save Network Results\n")
 save(Networks_Results_NoAncestorConfig, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " NonConfig Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution.RData"))
 
-cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
-# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-06-01 Networks for meanGT equals 7 with Poisson Distribution.RData")
+# cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
+# load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-02-28 NonConfig Networks for meanGT equals 20 with Poisson Distribution.RData")
 
 ##############################
 #### GET CONNECTED GRAPHS ####
@@ -177,7 +177,7 @@ if(WithConfig){
 cat("Identify Target Cases in Networks with Config (indegree > 0)\n")
 Uniquely_Source_Cases=lapply(1:repetitions, function(i){
   Connected_Graph=Plots[[i]]
-  Uniquely_Source_Cases=V(Graph_connected)$name[Graph_connected$indegree = 0]
+  Uniquely_Source_Cases=V(Connected_Graph)$name[Connected_Graph$indegree == 0]
   return(Uniquely_Source_Cases)
 })
 
@@ -202,7 +202,7 @@ Mean_True_Positives=mean(unlist(True_Positives_Counts))
 ########################
 #### FALSE POSTIVES ####
 
-#Cannot calculate because do not know true number of non-imported cases that are ancestors but should not be...
+#Cannot calculate because do not know true number of non-imported cases that are not ancestors
 
 
 #########################
@@ -211,45 +211,49 @@ Mean_True_Positives=mean(unlist(True_Positives_Counts))
 cat("Identify Target Cases in Networks with Config (indegree > 0)\n")
 Target_Cases=lapply(1:repetitions, function(i){
   Connected_Graph=Plots[[i]]
-  Target_Cases=V(Graph_connected)$name[Graph_connected$indegree > 0]
+  Target_Cases=V(Connected_Graph)$name[Connected_Graph$indegree > 0]
   return(Target_Cases)
 })
 
 cat("True Positives (Target Cases That Are Imported)\n")
-True_Positives=lapply(1:repetitions, function(i){
+False_Positives=lapply(1:repetitions, function(i){
   Target_Cases=Target_Cases[[i]]
-  True_Positives=Target_Cases[which(Target_Cases %in% myImportedCases)]
-  return(True_Positives)
+  False_Positives=Target_Cases[which(Target_Cases %in% myImportedCases)]
+  return(False_Positives)
 })
 
 cat("Counts of True Positives (Target Cases That Are Imported) per Network\n")
-True_Positives_Counts=lapply(1:repetitions, function(i){
-  True_Positives=True_Positives[[i]]
-  True_Positives_Countes=length(True_Positives)
-  return(True_Positives_Countes)
+False_Positives_Counts=lapply(1:repetitions, function(i){
+  False_Positives=False_Positives[[i]]
+  False_Positives_Countes=length(False_Positives)
+  return(False_Positives_Countes)
 })
 
 cat("Mean Number of True Positives (Target Cases That Are Imported)\n")
-Mean_True_Positives=mean(unlist(True_Positives_Counts))
+Mean_False_Positives=mean(unlist(False_Positives_Counts))
 
 ########################
 #### TRUE NEGATIVES ####
 
-#Cannot calculate because do not know true number of non-imported cases that are ancestors but should not be...
+#Cannot calculate because do not know true number of non-imported cases that not ancestors
 
 
+#####################
+#### SENSITIVITY ####
 
+Sensitivity=Mean_True_Positives/(Mean_True_Positives+Mean_False_Positives)*100
+Sensitivity
 
+#72% for 2 networks with configuration, meanGT 20
+#0% for 2 networks without configuration, meanGT 20
 
+#70% for 5 networks with configuration, meanGT 30
+#0% for 5 networks without configuration, meanGT 30
 
+#52% for 5 networks with configuration, meanGT 20
+#0% for 5 networks without configuration, meanGT 20
 
-
-
-
-
-
-
-
+#75.7% for 5 networks with configuration, meanGT 20, without move_alpha
 
 
 

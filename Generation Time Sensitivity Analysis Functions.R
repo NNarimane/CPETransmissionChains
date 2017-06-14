@@ -43,7 +43,7 @@ getCaseDataForNonTransformedDates=function(){
   cat("Merge Data Back\n")
   Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
   cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
@@ -80,7 +80,7 @@ getCaseDataForRandomlyTransformedDates=function(meanGT){
   cat("Merge Data Back\n")
   Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
   cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
@@ -119,7 +119,7 @@ getCaseDataForNormallyTransformedDates=function(meanGT){
   cat("Account for 'negative' dates: set new T0\n")
   Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
   cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
@@ -158,7 +158,7 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   cat("Account for 'negative' dates: set new T0\n")
   Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
   cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")

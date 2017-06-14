@@ -12,6 +12,8 @@ library("stringr")
 library("visNetwork")
 library("plyr")
 library("foreach")
+library("grid")
+library("gridExtra")
 
 #########################
 #### SET ENVIRONMENT ####
@@ -92,7 +94,7 @@ layout=layout.fruchterman.reingold(ConnectedGraph)
 
 cat("Set color palette\n")
 resolution=20
-colors=colorRampPalette(c("lightgray", "red"))(resolution)
+colors=colorRampPalette(c("white", "red"))(resolution)
 graphColor_outdegree=colors[as.numeric(cut(outdegree,breaks = resolution))]
 graphColor_indegree=colors[as.numeric(cut(indegree,breaks = resolution))]
 
@@ -111,6 +113,7 @@ plot_indegree=plot(ConnectedGraph, edge.arrow.size=.5,
                     vertex.frame.color="black", vertex.label.color="black", 
                     vertex.label.cex=0.8, vertex.label.dist=0, edge.curved=0.2, layout=layout,
                     main="Transmission Chain Predictions, Episodes with Highest Indegree") 
+
 
 #####################################
 #### IDENTIFY EVENTS OF INTEREST ####
