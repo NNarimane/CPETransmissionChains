@@ -158,13 +158,15 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   cat("Account for 'negative' dates: set new T0\n")
   Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
   cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
+  cat("Reset ID to case ID\n")
+  Final_Case_Data$ID=seq(from = 1, to = nrow(Final_Case_Data))
+  
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
-  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
-  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
-  Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
+  Ancestery=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
+  Final_Case_Data=merge(Final_Case_Data, Ancestery, by.x=("ID"), by.y="V1", all.x=T)
   
   cat("Disable estimation of ancestors for imported cases\n")
   Final_Case_Data$move_alpha=(Final_Case_Data$Imported == "N")
