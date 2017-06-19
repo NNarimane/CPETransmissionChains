@@ -157,7 +157,9 @@ Network_Plots_Config=lapply(1:repetitions, function(i){
   
   cat("Get Plot\n")
   tree=summary(Networks_Results[[i]])$tree
-  final_tree=tree[which(complete.cases(tree) & tree$support >= min_support),]
+  final_tree=tree[which(complete.cases(tree) 
+                        # & tree$support >= min_support
+                        ),]
   final_edgelist=cbind(as.character(final_tree$from), as.character(final_tree$to))
   
   cat("Get iGraph of Tree\n")
@@ -179,7 +181,9 @@ Network_Plots_NoAncestorConfig=lapply(1:repetitions, function(i){
   
   cat("Get Plot\n")
   tree=summary(Networks_Results_NoAncestorConfig[[i]])$tree
-  final_tree=tree[which(complete.cases(tree) & tree$support >= min_support),]
+  final_tree=tree[which(complete.cases(tree) 
+                        # & tree$support >= min_support
+                        ),]
   final_edgelist=cbind(as.character(final_tree$from), as.character(final_tree$to))
   
   cat("Get iGraph of Tree\n")
