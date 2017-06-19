@@ -42,13 +42,15 @@ getCaseDataForNonTransformedDates=function(){
   Repeated_cases$Dates=unlist(RepeatedCaseDates, use.names = FALSE)
   cat("Merge Data Back\n")
   Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
-  cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
+  cat("Reorder data by new dates and rename rownames\n")
+  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
+  cat("Reset ID to case ID\n")
+  Final_Case_Data$ID=seq(from = 1, to = nrow(Final_Case_Data))
+  
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
-  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
-  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Ancestery=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
   Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
   
   cat("Disable estimation of ancestors for imported cases\n")
@@ -79,13 +81,15 @@ getCaseDataForRandomlyTransformedDates=function(meanGT){
   Repeated_cases$Dates=unlist(RepeatedCaseDates, use.names = FALSE)
   cat("Merge Data Back\n")
   Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
-  cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
+  cat("Reorder data by new dates and rename rownames\n")
+  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
+  cat("Reset ID to case ID\n")
+  Final_Case_Data$ID=seq(from = 1, to = nrow(Final_Case_Data))
+  
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
-  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
-  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Ancestery=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
   Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
   
   cat("Disable estimation of ancestors for imported cases\n")
@@ -118,13 +122,15 @@ getCaseDataForNormallyTransformedDates=function(meanGT){
   Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
   cat("Account for 'negative' dates: set new T0\n")
   Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
-  cat("Reorder data by dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(as.numeric(Final_Case_Data$ID), Final_Case_Data$Dates),]
+  cat("Reorder data by new dates and rename rownames\n")
+  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
+  cat("Reset ID to case ID\n")
+  Final_Case_Data$ID=seq(from = 1, to = nrow(Final_Case_Data))
+  
   cat("Set imported ancestor as 'self' and non-imported as NA to estimate their ancestor\n")
-  ID=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
-  Final_Case_Data$ID=as.numeric(rownames(Final_Case_Data))
+  Ancestery=cbind(as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])), as.numeric(rownames(Final_Case_Data[Final_Case_Data$Imported == "N",])))
   Final_Case_Data=merge(Final_Case_Data, ID, by.x=("ID"), by.y="V1", all.x=T)
   
   cat("Disable estimation of ancestors for imported cases\n")
@@ -157,7 +163,7 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
   cat("Account for 'negative' dates: set new T0\n")
   Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
-  cat("Reorder data by dates and rename rownames\n")
+  cat("Reorder data by new dates and rename rownames\n")
   Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
@@ -246,16 +252,44 @@ buildNetworks<-function(meanGT){
   return(OutbreakerResult)
 }
 
+buildNetworks_test<-function(meanGT){
+  
+  cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
+  myData=getCaseDataForPoissonTransformedDates(meanGT)
+  
+  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
+  gentime=generation.time("gamma", c(meanGT, meanGT/2), truncate = nrow(myData))
+  gentime=gentime$GT
+  
+  cat("Get Contact Network\n")
+  myContacts=getContactNetwork(myData)
+  
+  cat("Configure Ancesteries\n")
+  myConfig = create_config(init_alpha = myData$initial_value, 
+                           move_alpha = myData$move_alpha, 
+                           init_tree = myData$initial_value)
+  
+  cat(paste("Get Outbreaker Data for meanGT =", meanGT, "\n"))
+  myOutbreakerData=outbreaker_data(dates=myData$Dates, 
+                                   dna=NULL,
+                                   ctd=myContacts,
+                                   w_dens=gentime)
+  
+  cat(paste("Run Outbreaker2  for meanGT =", meanGT, "\n"))
+  OutbreakerResult=outbreaker(data = myOutbreakerData, config=myConfig)
+  
+  return(OutbreakerResult)
+}
 #########################################################
 #### BUILD NETWORKS FUNCTION WITHOUT ANCESTOR CONFIG ####
 buildNetworks_NoAncestorConfig<-function(meanGT){
   
-  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
-  gentime=generation.time("gamma", c(meanGT, meanGT/2))
-  gentime=gentime$GT
-  
   cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
   myData=getCaseDataForPoissonTransformedDates(meanGT)
+  
+  cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
+  gentime=generation.time("gamma", c(meanGT, meanGT/2), truncate = nrow(myData))
+  gentime=gentime$GT
   
   cat("Get Contact Network\n")
   myContacts=getContactNetwork(myData)

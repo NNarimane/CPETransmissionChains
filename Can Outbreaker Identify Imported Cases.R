@@ -65,13 +65,13 @@ dsorted=getData(startDate, endDate)
 #### NUMBER OF NETWORKS TO COMPARE ####
 
 cat("Set number of repetitions\n")
-repetitions=5
+repetitions=10
 
 #########################
 #### MEAN GT TO TEST ####
 
 cat("MeanGT time to test\n")
-meanGT_toTest=20
+meanGT_toTest=30
 
 cat("Set meanGT for each network to test\n")
 meanGT=rep(meanGT_toTest, repetitions)
@@ -86,7 +86,7 @@ Networks_Results = lapply(meanGT, function(i){
 })
 
 cat("Save Network Results\n")
-save(Networks_Results, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution without move_alpha.RData"))
+save(Networks_Results, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " ", repetitions," Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution with move_alpha.RData"))
 
 # cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
 # load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-02-28 Networks for meanGT equals 20 with Poisson Distribution.RData")
@@ -101,7 +101,7 @@ Networks_Results_NoAncestorConfig = lapply(meanGT, function(i){
 })
 
 cat("Save Network Results\n")
-save(Networks_Results_NoAncestorConfig, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " NonConfig Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution.RData"))
+save(Networks_Results_NoAncestorConfig, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " ", repetitions," NonConfig Networks for meanGT equals ",meanGT_toTest, " with Poisson Distribution.RData"))
 
 # cat("Load Network Results for meanGT 1-60, Jan-June 2015\n")
 # load("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Network Results/2015-01-01 to 2015-02-28 NonConfig Networks for meanGT equals 20 with Poisson Distribution.RData")
@@ -112,22 +112,64 @@ save(Networks_Results_NoAncestorConfig, file = paste0("CPETransmissionChains/Net
 cat("Set min_support to 5%\n")
 min_support=0.05
 
+# cat("Get Plots for Network w/Configuration\n")
+# Network_Plots_Config=lapply(1:repetitions, function(i){
+#   
+#   cat("Get Plot\n")
+#   Network_Plot <- plot(Networks_Results[[i]], type = "network", min_support = min_support)
+#   
+#   cat("Get iGraph of Plot\n")
+#   Graph=graph.data.frame(Network_Plot$x$edges, vertices = Network_Plot$x$nodes)
+#   
+#   cat("Get Connected Graph\n")
+#   Connected_Graph=Graph-V(Graph)[degree(Graph)==0]
+#   
+#   cat("Get Degree, InDegree, OutDegree\n")
+#   V(Connected_Graph)$degree=degree(Connected_Graph, mode="all")
+#   V(Connected_Graph)$indegree=degree(Connected_Graph, mode="in")
+#   V(Connected_Graph)$outdegree=degree(Connected_Graph, mode="out")
+#   
+#   return(Connected_Graph)
+# })
+# 
+# cat("Get Plots for Network *w/o* Configuration\n")
+# Network_Plots_NoAncestorConfig=lapply(1:repetitions, function(i){
+#   
+#   cat("Get Plot\n")
+#   Network_Plot <- plot(Networks_Results_NoAncestorConfig[[i]], type = "network", min_support = min_support)
+#   
+#   cat("Get iGraph of Plot\n")
+#   Graph=graph.data.frame(Network_Plot$x$edges, vertices = Network_Plot$x$nodes)
+#   
+#   cat("Get Connected Graph\n")
+#   Connected_Graph=Graph-V(Graph)[degree(Graph)==0]
+#   
+#   cat("Get Degree, InDegree, OutDegree\n")
+#   V(Connected_Graph)$degree=degree(Connected_Graph, mode="all")
+#   V(Connected_Graph)$indegree=degree(Connected_Graph, mode="in")
+#   V(Connected_Graph)$outdegree=degree(Connected_Graph, mode="out")
+#   
+#   return(Connected_Graph)
+# })
+
 cat("Get Plots for Network w/Configuration\n")
 Network_Plots_Config=lapply(1:repetitions, function(i){
   
   cat("Get Plot\n")
-  Network_Plot <- plot(Networks_Results[[i]], type = "network", min_support = min_support)
+  tree=summary(Networks_Results[[i]])$tree
+  final_tree=tree[which(complete.cases(tree) & tree$support >= min_support),]
+  final_edgelist=cbind(as.character(final_tree$from), as.character(final_tree$to))
   
-  cat("Get iGraph of Plot\n")
-  Graph=graph.data.frame(Network_Plot$x$edges, vertices = Network_Plot$x$nodes)
-  
+  cat("Get iGraph of Tree\n")
+  Graph=graph_from_edgelist(as.matrix(final_edgelist))
+
   cat("Get Connected Graph\n")
   Connected_Graph=Graph-V(Graph)[degree(Graph)==0]
   
   cat("Get Degree, InDegree, OutDegree\n")
-  Connected_Graph$degree=degree(Connected_Graph, mode="all")
-  Connected_Graph$indegree=degree(Connected_Graph, mode="in")
-  Connected_Graph$outdegree=degree(Connected_Graph, mode="out")
+  V(Connected_Graph)$degree=degree(Connected_Graph, mode="all")
+  V(Connected_Graph)$indegree=degree(Connected_Graph, mode="in")
+  V(Connected_Graph)$outdegree=degree(Connected_Graph, mode="out")
   
   return(Connected_Graph)
 })
@@ -136,18 +178,20 @@ cat("Get Plots for Network *w/o* Configuration\n")
 Network_Plots_NoAncestorConfig=lapply(1:repetitions, function(i){
   
   cat("Get Plot\n")
-  Network_Plot <- plot(Networks_Results_NoAncestorConfig[[i]], type = "network", min_support = min_support)
+  tree=summary(Networks_Results_NoAncestorConfig[[i]])$tree
+  final_tree=tree[which(complete.cases(tree) & tree$support >= min_support),]
+  final_edgelist=cbind(as.character(final_tree$from), as.character(final_tree$to))
   
-  cat("Get iGraph of Plot\n")
-  Graph=graph.data.frame(Network_Plot$x$edges, vertices = Network_Plot$x$nodes)
+  cat("Get iGraph of Tree\n")
+  Graph=graph_from_edgelist(as.matrix(final_edgelist))
   
   cat("Get Connected Graph\n")
   Connected_Graph=Graph-V(Graph)[degree(Graph)==0]
   
   cat("Get Degree, InDegree, OutDegree\n")
-  Connected_Graph$degree=degree(Connected_Graph, mode="all")
-  Connected_Graph$indegree=degree(Connected_Graph, mode="in")
-  Connected_Graph$outdegree=degree(Connected_Graph, mode="out")
+  V(Connected_Graph)$degree=degree(Connected_Graph, mode="all")
+  V(Connected_Graph)$indegree=degree(Connected_Graph, mode="in")
+  V(Connected_Graph)$outdegree=degree(Connected_Graph, mode="out")
   
   return(Connected_Graph)
 })
@@ -163,7 +207,7 @@ print(length(myImportedCases))
 ################################
 #### WHICH NETWORKS TO TEST ####
 
-WithConfig=TRUE
+WithConfig=T
 
 if(WithConfig){
   Plots=Network_Plots_Config
@@ -177,7 +221,7 @@ if(WithConfig){
 cat("Identify Target Cases in Networks with Config (indegree > 0)\n")
 Uniquely_Source_Cases=lapply(1:repetitions, function(i){
   Connected_Graph=Plots[[i]]
-  Uniquely_Source_Cases=V(Connected_Graph)$name[Connected_Graph$indegree == 0]
+  Uniquely_Source_Cases=V(Connected_Graph)$name[V(Connected_Graph)$indegree == 0]
   return(Uniquely_Source_Cases)
 })
 
@@ -211,7 +255,7 @@ Mean_True_Positives=mean(unlist(True_Positives_Counts))
 cat("Identify Target Cases in Networks with Config (indegree > 0)\n")
 Target_Cases=lapply(1:repetitions, function(i){
   Connected_Graph=Plots[[i]]
-  Target_Cases=V(Connected_Graph)$name[Connected_Graph$indegree > 0]
+  Target_Cases=V(Connected_Graph)$name[V(Connected_Graph)$indegree > 0]
   return(Target_Cases)
 })
 

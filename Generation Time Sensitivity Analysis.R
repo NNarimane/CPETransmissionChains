@@ -133,44 +133,98 @@ save(Networks_Results_Normal10, file = paste0("CPETransmissionChains/Network Res
 
 ############################################
 
-# cat("Maximum meanGT time to test\n")
-# MaxMeanGT=60
-# 
-# #NonTransformed
-# cat("Get Networks via lapply\n")
-# Networks_Results_NonTransformed6 = lapply(1:MaxMeanGT, function(i){
-#   Network=buildNetworks_NonTransformed(i)
-#   return(Network)
-# })
-# cat("Save Network Results\n")
-# save(Networks_Results_NonTransformed6, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with NonTransformed Distribution6.RData"))
-# 
-# #NonTransformed
-# cat("Get Networks via lapply\n")
-# Networks_Results_NonTransformed7 = lapply(1:MaxMeanGT, function(i){
-#   Network=buildNetworks_NonTransformed(i)
-#   return(Network)
-# })
-# cat("Save Network Results\n")
-# save(Networks_Results_NonTransformed7, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with NonTransformed Distribution7.RData"))
-# 
-# #NonTransformed
-# cat("Get Networks via lapply\n")
-# Networks_Results_NonTransformed8 = lapply(1:MaxMeanGT, function(i){
-#   Network=buildNetworks_NonTransformed(i)
-#   return(Network)
-# })
-# cat("Save Network Results\n")
-# save(Networks_Results_NonTransformed8, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with NonTransformed Distribution8.RData"))
-# 
-# #NonTransformed
-# cat("Get Networks via lapply\n")
-# Networks_Results_NonTransformed9 = lapply(1:MaxMeanGT, function(i){
-#   Network=buildNetworks_NonTransformed(i)
-#   return(Network)
-# })
-# cat("Save Network Results\n")
-# save(Networks_Results_NonTransformed9, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with NonTransformed Distribution9.RData"))
+cat("Maximum meanGT time to test\n")
+MaxMeanGT=60
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson11 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson11, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution11.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_NonTransformed12 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson12, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution12.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson13 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson13, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution13.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson14 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson14, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution14.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson15 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson15, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution15.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson16 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson16, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution16.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson17 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson17, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution17.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson18 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson18, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution18.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson19 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson19, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution19.RData"))
+
+#Poisson
+cat("Get Networks via lapply\n")
+Networks_Results_Poisson20 = lapply(1:MaxMeanGT, function(i){
+  Network=buildNetworks_Poisson(i)
+  return(Network)
+})
+cat("Save Network Results\n")
+save(Networks_Results_Poisson20, file = paste0("CPETransmissionChains/Network Results/",startDate, " to ", endDate, " Networks for meanGT 1 to ",MaxMeanGT, " with Poisson Distribution20.RData"))
 
 
 
@@ -186,8 +240,8 @@ cat("Set min_support\n")
 min_support=0.05
 
 cat("Run Components Test\n")
-Components_Results_Normal10=lapply(1:length(Networks_Results_Normal10), function(i){
-  Network=Networks_Results_Normal10[[i]]
+Components_Results_Poisson14=lapply(1:length(Networks_Results_Poisson14), function(i){
+  Network=Networks_Results_Poisson14[[i]]
   Network_Plot=plot(Network, type="network", min_support = min_support)
   Network_Edgelist=cbind(Network_Plot$x$edges$from, Network_Plot$x$edges$to)
   Graph=graph_from_edgelist(Network_Edgelist)
@@ -197,11 +251,11 @@ Components_Results_Normal10=lapply(1:length(Networks_Results_Normal10), function
   return(Result)
 })
 
-Components_Results_Normal10=data.frame(matrix(unlist(Components_Results_Normal10), ncol=3, byrow=T))
-colnames(Components_Results_Normal10)=c("meanGT", "Clusters", "Nodes")
+Components_Results_Poisson14=data.frame(matrix(unlist(Components_Results_Poisson14), ncol=3, byrow=T))
+colnames(Components_Results_Poisson14)=c("meanGT", "Clusters", "Nodes")
 
 cat("Save Components Results\n")
-save(Components_Results_Normal10, file = paste0("CPETransmissionChains/Components Results/",startDate, " to ", endDate, " Components Results for meanGT 1 to ",MaxMeanGT, " with Normal10 Distribution and min_support=",min_support,".RData"))
+save(Components_Results_Poisson14, file = paste0("CPETransmissionChains/Components Results/",startDate, " to ", endDate, " Components Results for meanGT 1 to ",MaxMeanGT, " with Poisson14 Distribution and min_support=",min_support,".RData"))
 
 ###################################
 #### GET NETWORKS VIA PARALLEL ####

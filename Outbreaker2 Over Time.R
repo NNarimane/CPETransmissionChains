@@ -65,7 +65,7 @@ dsorted=getData(startDate, endDate)
 #### MEAN GT TO TEST ####
 
 cat("MeanGT time\n")
-meanGT=38
+meanGT=7
 
 cat("Cutoff")
 cutoff="2015-03-31"
@@ -85,6 +85,7 @@ Network_LastHalf=buildNetworks(meanGT)
 ##############################
 #### GET CONNECTED GRAPHS ####
 
+dsorted=dsorted_original
 myData=getCaseDataForPoissonTransformedDates(meanGT)
 
 min_support=0.05
