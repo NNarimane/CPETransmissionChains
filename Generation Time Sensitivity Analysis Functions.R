@@ -25,7 +25,7 @@ getData=function(startDate, endDate){
   dsorted$Dates=as.numeric(dsorted[,1])-min(as.numeric(dsorted[,1]))
   cat("Set ID as rownumber\n")
   rownames(dsorted)=1:nrow(dsorted)
-  dsorted$ID=rownames(dsorted)
+  dsorted$EpisodeID=rownames(dsorted)
   return(dsorted)
 }
 
@@ -153,7 +153,7 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   
   cat("Poisson Distribution of Case Dates After (Addition) Episode Date\n")
   for(i in 1:length(RepeatedCaseDates)){
-    RepeatedCaseDates[[i]][1:length(RepeatedCaseDates[[i]])] = round(rpois(length(RepeatedCaseDates[[i]]), lambda=meanGT)) + RepeatedCaseDates[[i]][1]
+    RepeatedCaseDates[[i]][2:length(RepeatedCaseDates[[i]])] = round(rpois(length(RepeatedCaseDates[[i]])-1, lambda=length(RepeatedCaseDates[[i]])/meanGT)) + RepeatedCaseDates[[i]][1]
   }
   
   cat("Expand data by number of cases\n")
@@ -164,7 +164,7 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   cat("Account for 'negative' dates: set new T0\n")
   Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
   cat("Reorder data by new dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates, Final_Case_Data$DateEpisode),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
   cat("Reset ID to case ID\n")
@@ -260,6 +260,7 @@ buildNetworks_test<-function(meanGT){
   cat(paste("Calculate generation time for meanGT =", meanGT, "\n"))
   gentime=generation.time("gamma", c(meanGT, meanGT/2), truncate = nrow(myData))
   gentime=gentime$GT
+  gentime=gentime[gentime>0]
   
   cat("Get Contact Network\n")
   myContacts=getContactNetwork(myData)

@@ -29,25 +29,27 @@ library("splitstackshape")
 #########################
 #### SET ENVIRONMENT ####
 
-cat("Set Working Environment\n")
-envNN=T
-if(envNN){
-  currentwd=setwd("C:/Users/Narimane/Dropbox/CPE Transmission Chains")
-}else{
-  currentwd=setwd("/Users/pascalcrepey/Google Drive/1-EPC/stageNN/") 
-}
+# cat("Set Working Environment\n")
+# envNN=T
+# if(envNN){
+#   currentwd=setwd("C:/Users/Narimane/Dropbox/CPE Transmission Chains")
+# }else{
+#   currentwd=setwd("/Users/pascalcrepey/Google Drive/1-EPC/stageNN/") 
+# }
 
 ###################################
 #### GET FUNCTIONS SOURCE CODE ####
 
-source("CPETransmissionChains/Generation Time Sensitivity Analysis Functions.R", 
+source("Generation Time Sensitivity Analysis Functions.R", 
        local = FALSE, verbose = getOption("verbose"))
 
 ###########################
 #### LOAD DEPT NETWORK ####
 
 cat("Upload Department Contact Network\n")
-load("../Hospital_Network/HospitalNetwork/Data/Department Network.RData")
+dbloc="/Users/pascalcrepey/Dropbox/"
+#dbloc="..
+load(paste0(dbloc,"Hospital_Network/HospitalNetwork/Data/Department Network.RData"))
 
 #########################################
 #### GET DATA ON OXA-48 CPE EPISODES ####
@@ -56,16 +58,18 @@ cat("Choose start date\n")
 startDate="2015-01-01"
 
 cat("Choose end date\n")
-endDate="2015-06-30"
+endDate="2015-01-15"
 
 cat("Load data\n")
+wd=getwd()
+setwd(paste0(dbloc,"CPE Transmission Chains"))
 dsorted=getData(startDate, endDate)
-
+setwd(wd)
 #########################
 #### MEAN GT TO TEST ####
 
 cat("MeanGT time\n")
-meanGT=38
+meanGT=30
 
 #########################
 #### Run Outbreaker2 ####
@@ -123,7 +127,7 @@ V(ConnectedGraph)$indegree=degree(ConnectedGraph, mode="in")
 V(ConnectedGraph)$outdegree=degree(ConnectedGraph, mode="out")
 V(ConnectedGraph)$betweenness=betweenness(ConnectedGraph)
 V(ConnectedGraph)$closeness=closeness(ConnectedGraph)
-V(ConnectedGraph)$dept=
+# V(ConnectedGraph)$dept=
 
 E(ConnectedGraph)$time=final_tree[,3]
 
@@ -142,9 +146,9 @@ graphColor_indegree=colors[as.numeric(cut(indegree,breaks = resolution))]
 cat("Plot outdegree\n")
 plot_outdegree=plot(ConnectedGraph, edge.arrow.size=.5, 
                     vertex.color=graphColor_outdegree, 
-                    vertex.size=5, 
+                    vertex.size=12, 
                     vertex.frame.color="black", vertex.label.color="black", 
-                    vertex.label.cex=0.5, vertex.label.dist=0, edge.curved=0.2, layout=layout,
+                    vertex.label.cex=1, vertex.label.dist=0, edge.curved=0.2, layout=layout,
                     main="Transmission Chain Predictions, Episodes with Highest Outdegree") 
 
 cat("Plot indegree\n")
