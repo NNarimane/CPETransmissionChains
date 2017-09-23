@@ -8,7 +8,7 @@ source("CommonHeader.R")
 #### MEAN GT TO TEST ####
 
 cat("MeanGT time\n")
-meanGT=38
+meanGT=30
 
 #########################
 #### Run Outbreaker2 ####
@@ -66,7 +66,7 @@ V(ConnectedGraph)$indegree=degree(ConnectedGraph, mode="in")
 V(ConnectedGraph)$outdegree=degree(ConnectedGraph, mode="out")
 V(ConnectedGraph)$betweenness=betweenness(ConnectedGraph)
 V(ConnectedGraph)$closeness=closeness(ConnectedGraph)
-V(ConnectedGraph)$dept=
+# V(ConnectedGraph)$dept=
 
 E(ConnectedGraph)$time=final_tree[,3]
 
@@ -85,9 +85,9 @@ graphColor_indegree=colors[as.numeric(cut(indegree,breaks = resolution))]
 cat("Plot outdegree\n")
 plot_outdegree=plot(ConnectedGraph, edge.arrow.size=.5, 
                     vertex.color=graphColor_outdegree, 
-                    vertex.size=5, 
+                    vertex.size=12, 
                     vertex.frame.color="black", vertex.label.color="black", 
-                    vertex.label.cex=0.5, vertex.label.dist=0, edge.curved=0.2, layout=layout,
+                    vertex.label.cex=1, vertex.label.dist=0, edge.curved=0.2, layout=layout,
                     main="Transmission Chain Predictions, Episodes with Highest Outdegree") 
 
 cat("Plot indegree\n")
