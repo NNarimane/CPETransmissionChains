@@ -147,24 +147,22 @@ getCaseDataForNormallyTransformedDates=function(meanGT){
 getCaseDataForPoissonTransformedDates=function(meanGT){
   cat("Get Case Dates to Repeat\n")
   CaseDates=dsorted[which(dsorted$TotalCases > 1),]
-  CasePerEpisode=CaseDates$TotalCases
-  cat("Repeat Dates by N Case\n")
-  RepeatedCaseDates=foreach(i=1:length(CaseDates$Dates)) %do% rep(CaseDates$Dates[i], CasePerEpisode[i])
   
-  cat("Poisson Distribution of Case Dates After (Addition) Episode Date\n")
-  for(i in 1:length(RepeatedCaseDates)){
-    RepeatedCaseDates[[i]][1:length(RepeatedCaseDates[[i]])] = round(rpois(length(RepeatedCaseDates[[i]]), lambda=meanGT)) + RepeatedCaseDates[[i]][1]
-  }
-  
+  cat("Poisson Distribution of Cases Dates After (Addition) Episode Date\n")
+  RepeatedCaseDates=lapply(1:dim(CaseDates)[1], function(i){
+    c(CaseDates$Dates[i],CaseDates$Dates[i]+rpois(n = CaseDates$TotalCases[i]-1,lambda=meanGT/3 ))
+  })
   cat("Expand data by number of cases\n")
   Repeated_cases <- CaseDates[rep(row.names(CaseDates), CaseDates$TotalCases),]
   Repeated_cases$Dates=unlist(RepeatedCaseDates, use.names = FALSE)
+  
   cat("Merge Data Back\n")
-  Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
-  cat("Account for 'negative' dates: set new T0\n")
-  Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
+  Final_Case_Data=rbind(dsorted[which(dsorted$TotalCases == 1),], Repeated_cases)
+  
+  #cat("Account for 'negative' dates: set new T0\n")
+  #Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
   cat("Reorder data by new dates and rename rownames\n")
-  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates),]
+  Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates, Final_Case_Data$DateEpisode),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)
   
   cat("Reset ID to case ID\n")
@@ -178,7 +176,7 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
   Final_Case_Data$move_alpha=(Final_Case_Data$Imported == "N")
   
   cat("Rename Columns\n")
-  colnames(Final_Case_Data)=c("ID","DateEpisode","Department","Imported","TotalCases","Dates","initial_value","move_alpha")
+  colnames(Final_Case_Data)=c("ID","DateEpisode","Department","Imported","TotalCases","Dates","EpisodeID","initial_value","move_alpha")
   
   return(Final_Case_Data)
 }
