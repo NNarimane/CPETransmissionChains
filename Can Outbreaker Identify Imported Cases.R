@@ -31,7 +31,7 @@ library("rbenchmark")
 #### SET ENVIRONMENT ####
 
 cat("Set Working Environment\n")
-envNN=F
+envNN=T
 if(envNN){
   currentwd=setwd("C:/Users/Narimane/Dropbox/CPE Transmission Chains")
 }else{

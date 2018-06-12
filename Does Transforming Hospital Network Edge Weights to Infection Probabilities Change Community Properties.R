@@ -126,7 +126,7 @@ cat("Plot\n")
 par(mfrow=c(1,1))
 # par(mfrow=c(3,1))
 
-plot(WeightedDegree_Table, type="p", pch="*", xlim=c(0,7), ylab = "Frequency",
+plot(WeightedDegree_Table, type="p", pch="*",ylab = "Frequency",
      main="Hospital Network Total Weighted Degree Distribution (Weight=Prob of Infection)")
 grid(nx=30, ny=6, col="lightgrey", lwd = 1)
 plot(WeightedIndegree_Table, type="p", pch="*", xlim=c(0,2), ylab = "Frequency",
@@ -136,6 +136,15 @@ plot(WeightedOutdegree_Table, type="p", pch="*", xlim=c(0,5), ylab = "Frequency"
      main="Hospital Network Weighted Out-Degree Distribution (Weight=Prob of Infection)")
 grid(nx=30, ny=6, col="lightgrey", lwd = 1)
 
+
+####improved
+
+hist(log(WeightedDegree), breaks=20)
+hist(log(WeightedIndegree), breaks=20)
+hist(log(WeightedOutdegree), breaks=20)
+
+WeightedDegrees=cbind(WeightedDegree, WeightedIndegree, WeightedOutdegree)
+save(WeightedDegrees, file = "Data/Weighted Degrees.RData")
 
 ###Boxplots
 par(mfrow=c(1,2))
@@ -266,9 +275,13 @@ save(directed.graph_ALL, file="Data/Directed Prob Weighted Hospital Network with
 
 ######table of hospital types
 
+load("Data/Directed Prob Weighted Hospital Network with Map Communities and WDeg Class and Hosp Type.RData")
+
 table(V(directed.graph_ALL)$Type1[which(V(directed.graph_ALL)$InDegClassification == "Vulnerable")])
 table(V(directed.graph_ALL)$Type2[which(V(directed.graph_ALL)$InDegClassification == "Vulnerable")])
 
 table(V(directed.graph_ALL)$Type1[which(V(directed.graph_ALL)$OutDegClassification == "Infectious")])
 table(V(directed.graph_ALL)$Type2[which(V(directed.graph_ALL)$OutDegClassification == "Infectious")])
 
+table(V(directed.graph_ALL)$Type1[which(V(directed.graph_ALL)$OutDegClassification == "Infectious" & V(directed.graph_ALL)$InDegClassification == "Vulnerable")])
+table(V(directed.graph_ALL)$Type2[which(V(directed.graph_ALL)$OutDegClassification == "Infectious" & V(directed.graph_ALL)$InDegClassification == "Vulnerable")])
