@@ -184,6 +184,7 @@ getCaseDataForPoissonTransformedDatesPC<-function(meanGT){
 getCaseDataForPoissonTransformedDates=function(meanGT){
   cat("Get Case Dates to Repeat\n")
   CaseDates=dsorted[which(dsorted$TotalCases > 1),]
+
   CasePerEpisode=CaseDates$TotalCases
   cat("Repeat Dates by N Case\n")
   RepeatedCaseDates=foreach(i=1:length(CaseDates$Dates)) %do% rep(CaseDates$Dates[i], CasePerEpisode[i])
@@ -193,13 +194,19 @@ getCaseDataForPoissonTransformedDates=function(meanGT){
     RepeatedCaseDates[[i]][2:length(RepeatedCaseDates[[i]])] = round(rpois(length(RepeatedCaseDates[[i]])-1, lambda=meanGT/3)) + RepeatedCaseDates[[i]][1]
   }
   
+  cat("Poisson Distribution of Cases Dates After (Addition) Episode Date\n")
+  # RepeatedCaseDates=lapply(1:dim(CaseDates)[1], function(i){
+  #   c(CaseDates$Dates[i],CaseDates$Dates[i]+rpois(n = CaseDates$TotalCases[i]-1,lambda=meanGT/3 ))
+  # })
   cat("Expand data by number of cases\n")
   Repeated_cases <- CaseDates[rep(row.names(CaseDates), CaseDates$TotalCases),]
   Repeated_cases$Dates=unlist(RepeatedCaseDates, use.names = FALSE)
+  
   cat("Merge Data Back\n")
-  Final_Case_Data=rbind(dsorted[which(!dsorted$TotalCases > 1),], Repeated_cases)
-  cat("Account for 'negative' dates: set new T0\n")
-  Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
+  Final_Case_Data=rbind(dsorted[which(dsorted$TotalCases == 1),], Repeated_cases)
+  
+  #cat("Account for 'negative' dates: set new T0\n")
+  #Final_Case_Data$Dates=Final_Case_Data$Dates-min(Final_Case_Data$Dates)
   cat("Reorder data by new dates and rename rownames\n")
   Final_Case_Data=Final_Case_Data[order(Final_Case_Data$Dates, Final_Case_Data$DateEpisode),]
   rownames(Final_Case_Data)=1:nrow(Final_Case_Data)

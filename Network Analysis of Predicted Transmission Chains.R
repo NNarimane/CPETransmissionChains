@@ -2,59 +2,13 @@
 #####CPE Transmission Chains: Network Analysis#####
 ###################################################
 
-#################################
-#### INSTALL & LOAD PACKAGES ####
-
-cat("Load Packages\n")
-library("data.table")
-library("igraph")
-library("stringr")
-library("visNetwork")
-library("plyr")
-library("foreach")
-library("grid")
-library("gridExtra")
-
-#########################
-#### SET ENVIRONMENT ####
-
-cat("Set Working Environment\n")
-envNN=T
-if(envNN){
-  currentwd=setwd("C:/Users/Narimane/Dropbox/CPE Transmission Chains")
-}else{
-  currentwd=setwd("/Users/pascalcrepey/Google Drive/1-EPC/stageNN/") 
-}
-
-###################################
-#### GET FUNCTIONS SOURCE CODE ####
-
-source("C:/Users/Narimane/Dropbox/CPE Transmission Chains/CPETransmissionChains/Generation Time Sensitivity Analysis Functions.R", 
-       local = FALSE, verbose = getOption("verbose"))
-
-###########################
-#### LOAD DEPT NETWORK ####
-
-cat("Upload Department Contact Network\n")
-load("../Hospital_Network/HospitalNetwork/Data/Department Network.RData")
-
+source("CommonHeader.R")
 ####################
 #### PARAMETERS ####
 
 meanGT = 38
 min_support = 0.05
 
-#########################################
-#### GET DATA ON OXA-48 CPE EPISODES ####
-
-cat("Choose start date\n")
-startDate="2015-01-01"
-
-cat("Choose end date\n")
-endDate="2015-06-30"
-
-cat("Load data\n")
-dsorted=getData(startDate, endDate)
 
 cat(paste("(Poisson) Transformation Function for meanGT =", meanGT, "\n"))
 myData=getCaseDataForPoissonTransformedDates(meanGT)
